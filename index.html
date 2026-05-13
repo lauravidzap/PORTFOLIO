@@ -342,6 +342,85 @@
     }
     .project-card:hover .carousel-phone-wrap img { filter: grayscale(0%); transform: scale(1.03); }
 
+    /* Hint "Ver completo" que aparece al hover */
+    .carousel-tap-hint {
+      position: absolute; inset: 0; z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+      gap: .5rem;
+      background: rgba(10,10,10,.55);
+      font-family: var(--font-body); font-size: .78rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase; color: #fff;
+      opacity: 0; transition: opacity .3s;
+    }
+    .carousel-tap-hint i { color: var(--fucsia); }
+    .project-card:hover .carousel-tap-hint { opacity: 1; }
+
+    /* ══ MODAL DE CARRUSEL ══ */
+    #carousel-modal {
+      position: fixed; inset: 0; z-index: 9600;
+      background: rgba(0,0,0,.96);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+      padding: 3rem 1.5rem 1.5rem;
+    }
+    #carousel-modal.open { opacity: 1; pointer-events: all; }
+
+    .carousel-modal-close {
+      position: fixed; top: 1.5rem; right: 1.5rem;
+      background: none; border: none; color: var(--blanco);
+      cursor: none; opacity: .7; transition: opacity .2s, color .2s;
+      display: flex; align-items: center; gap: .4rem;
+      font-family: var(--font-body); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase;
+      z-index: 10;
+    }
+    .carousel-modal-close:hover { opacity: 1; color: var(--fucsia); }
+
+    .carousel-modal-inner {
+      width: 100%; max-width: 1100px;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+
+    /* Zona de scroll horizontal — aquí vive la imagen completa */
+    .carousel-modal-scroll {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      border: 1px solid rgba(255,255,255,.08);
+      background: #000;
+      /* Scroll suave con inercia en iOS/touch */
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      /* Scrollbar estilizada */
+      scrollbar-width: thin;
+      scrollbar-color: var(--fucsia) rgba(255,255,255,.06);
+    }
+    .carousel-modal-scroll::-webkit-scrollbar { height: 4px; }
+    .carousel-modal-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,.04); }
+    .carousel-modal-scroll::-webkit-scrollbar-thumb { background: var(--fucsia); border-radius: 2px; }
+
+    .carousel-modal-scroll img {
+      /* La imagen se muestra a su tamaño natural en altura, ancho libre */
+      height: min(75vh, 700px);
+      width: auto;
+      display: block;
+      /* Sin object-fit: queremos ver la imagen COMPLETA */
+    }
+
+    .carousel-modal-meta {
+      display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .carousel-modal-title {
+      font-family: var(--font-title); font-size: .9rem; color: var(--blanco);
+    }
+    .carousel-modal-kpi {
+      font-size: .78rem; color: var(--fucsia); font-weight: 700; letter-spacing: .08em;
+    }
+    .carousel-modal-hint {
+      margin-left: auto; font-size: .7rem; color: var(--gris-light);
+      display: flex; align-items: center; gap: .4rem; letter-spacing: .05em;
+    }
+    .carousel-modal-hint i { color: var(--fucsia); }
+
     /* Dots de navegación del carrusel */
     .carousel-dots { display: flex; justify-content: center; gap: 4px; padding: .6rem 0; background: #000; }
     .carousel-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.25); }
@@ -455,6 +534,23 @@
           preload="metadata"
           style="width:100%;height:100%;display:block;background:#000;outline:none;"
         ></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CARRUSEL — imagen completa con scroll horizontal -->
+  <div id="carousel-modal" role="dialog" aria-modal="true" aria-label="Ver carrusel completo">
+    <button class="carousel-modal-close" id="carouselModalClose" aria-label="Cerrar">
+      <i class="fa-solid fa-xmark"></i> Cerrar
+    </button>
+    <div class="carousel-modal-inner">
+      <div class="carousel-modal-scroll" id="carouselModalScroll">
+        <img id="carouselModalImg" src="" alt="Carrusel completo" />
+      </div>
+      <div class="carousel-modal-meta" id="carouselModalMeta">
+        <span class="carousel-modal-title" id="carouselModalTitle"></span>
+        <span class="carousel-modal-kpi" id="carouselModalKpi"></span>
+        <span class="carousel-modal-hint"><i class="fa-solid fa-arrows-left-right"></i> Desliza para ver todas las diapositivas</span>
       </div>
     </div>
   </div>
@@ -795,20 +891,19 @@
       <div class="portfolio-cat-title" data-divider="carrusel" data-row="carrusel"><h3>Carruseles · Instagram (1080×1080 px)</h3></div>
       <div class="grid-row grid-row--carruseles" data-row="carrusel">
 
-        <article class="project-card card-carousel" data-category="carrusel">
+        <!-- CARRUSEL 1 -->
+        <article class="project-card card-carousel" data-category="carrusel"
+                 onclick="openCarousel('assests/Carrusel1.png', 'Carrusel ARAKA 1', '+140% interacciones contenido')"
+                 style="cursor:none;">
           <div class="carousel-ig-header">
             <div class="ig-avatar" style="background:var(--gris-mid)"></div>
             <span class="ig-username">araka.estudio</span>
             <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
           <div class="carousel-phone-wrap">
-            <img src="assests/Carrusel1.png" alt="Carrusel Instagram 1"
-                 onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#2e2e2e)';this.removeAttribute('src');" />
-            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
-          </div>
-          <div class="carousel-dots">
-            <div class="carousel-dot active"></div><div class="carousel-dot"></div>
-            <div class="carousel-dot"></div><div class="carousel-dot"></div>
+            <img src="assests/Carrusel1.png" alt="Carrusel Instagram 1" />
+            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> Carrusel</div>
+            <div class="carousel-tap-hint"><i class="fa-solid fa-expand"></i> Ver completo</div>
           </div>
           <div class="carousel-ig-footer">
             <div class="ig-actions">
@@ -822,19 +917,19 @@
           </div>
         </article>
 
-        <article class="project-card card-carousel" data-category="carrusel">
+        <!-- CARRUSEL 2 -->
+        <article class="project-card card-carousel" data-category="carrusel"
+                 onclick="openCarousel('assests/Carrusel2.png', 'Carrusel ARAKA 2', '+728% clics en el enlace')"
+                 style="cursor:none;">
           <div class="carousel-ig-header">
             <div class="ig-avatar" style="background:var(--gris-mid)"></div>
             <span class="ig-username">araka.estudio</span>
             <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
           <div class="carousel-phone-wrap">
-            <img src="assests/Carrusel2.png" alt="Carrusel Instagram 2"
-                 onerror="this.style.background='linear-gradient(135deg,#1a0a1a,#2e1a2e)';this.removeAttribute('src');" />
-            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
-          </div>
-          <div class="carousel-dots">
-            <div class="carousel-dot active"></div><div class="carousel-dot"></div><div class="carousel-dot"></div>
+            <img src="assests/Carrusel2.png" alt="Carrusel Instagram 2" />
+            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> Carrusel</div>
+            <div class="carousel-tap-hint"><i class="fa-solid fa-expand"></i> Ver completo</div>
           </div>
           <div class="carousel-ig-footer">
             <div class="ig-actions">
@@ -848,20 +943,19 @@
           </div>
         </article>
 
-        <article class="project-card card-carousel" data-category="carrusel">
+        <!-- CARRUSEL 3 -->
+        <article class="project-card card-carousel" data-category="carrusel"
+                 onclick="openCarousel('assests/Carrusel3.png', 'Carrusel ARAKA 3', '+728% clics en el enlace')"
+                 style="cursor:none;">
           <div class="carousel-ig-header">
             <div class="ig-avatar" style="background:var(--gris-mid)"></div>
             <span class="ig-username">araka.estudio</span>
             <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
           <div class="carousel-phone-wrap">
-            <img src="assests/Carrusel3.png" alt="Carrusel Instagram 3"
-                 onerror="this.style.background='linear-gradient(135deg,#0a1a0a,#1a2e1a)';this.removeAttribute('src');" />
-            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
-          </div>
-          <div class="carousel-dots">
-            <div class="carousel-dot active"></div><div class="carousel-dot"></div>
-            <div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div>
+            <img src="assests/Carrusel3.png" alt="Carrusel Instagram 3" />
+            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> Carrusel</div>
+            <div class="carousel-tap-hint"><i class="fa-solid fa-expand"></i> Ver completo</div>
           </div>
           <div class="carousel-ig-footer">
             <div class="ig-actions">
@@ -883,7 +977,7 @@
 
         <article class="project-card card-offline" data-category="offline">
           <div class="project-thumb">
-            <img src="tote-bag.jpg" alt="Tote bag ARAKA" style="height:260px"
+            <img src="assests/totte.jpeg" alt="Tote bag ARAKA" style="height:260px"
                  onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#2a1a1a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
           <div class="offline-meta">
@@ -895,7 +989,7 @@
 
         <article class="project-card card-offline" data-category="offline">
           <div class="project-thumb">
-            <img src="cartel.jpg" alt="Cartel ARAKA" style="height:260px"
+            <img src="assests/cartel.jpeg" alt="Cartel ARAKA" style="height:260px"
                  onerror="this.style.background='linear-gradient(135deg,#1a1a2a,#0a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
           <div class="offline-meta">
@@ -907,7 +1001,7 @@
 
         <article class="project-card card-offline" data-category="offline">
           <div class="project-thumb">
-            <img src="revista.jpg" alt="Revista ARAKA" style="height:260px"
+            <img src="assests/revista.jpeg" alt="Revista ARAKA" style="height:260px"
                  onerror="this.style.background='linear-gradient(135deg,#2a1a0a,#1a0a0a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
           <div class="offline-meta">
@@ -924,7 +1018,7 @@
 
         <article class="project-card card-offline" data-category="offline">
           <div class="project-thumb">
-            <img src="render-1.jpg" alt="Render ARAKA 1" style="height:260px"
+            <img src="assests/render1.png" alt="Render ARAKA 1" style="height:260px"
                  onerror="this.style.background='linear-gradient(135deg,#1a2a2a,#0a1a1a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
           <div class="offline-meta">
@@ -936,7 +1030,7 @@
 
         <article class="project-card card-offline" data-category="offline">
           <div class="project-thumb">
-            <img src="render-2.jpg" alt="Render ARAKA 2" style="height:260px"
+            <img src="assests/render2.png" alt="Render ARAKA 2" style="height:260px"
                  onerror="this.style.background='linear-gradient(135deg,#1a2a1a,#0a1a0a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
           <div class="offline-meta">
@@ -948,7 +1042,7 @@
 
         <article class="project-card card-offline" data-category="offline">
           <div class="project-thumb">
-            <img src="render-3.jpg" alt="Render ARAKA 3" style="height:260px"
+            <img src="assests/render3.png" alt="Render ARAKA 3" style="height:260px"
                  onerror="this.style.background='linear-gradient(135deg,#2a1a2a,#1a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
           <div class="offline-meta">
@@ -1153,6 +1247,37 @@
 
   }); // /load
 
+
+  /* ════════════════════════════════════════════════════════
+     MODAL DE CARRUSEL
+     openCarousel(src, title, kpi) — llamado con onclick desde <article>.
+     Muestra la imagen completa con scroll horizontal.
+  ════════════════════════════════════════════════════════ */
+  function openCarousel(src, title, kpi) {
+    const modal  = document.getElementById('carousel-modal');
+    const img    = document.getElementById('carouselModalImg');
+    const scroll = document.getElementById('carouselModalScroll');
+    document.getElementById('carouselModalTitle').textContent = title;
+    document.getElementById('carouselModalKpi').textContent   = kpi;
+    img.src = src;
+    scroll.scrollLeft = 0; // rebobinar al inicio
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCarousel() {
+    document.getElementById('carousel-modal').classList.remove('open');
+    document.getElementById('carouselModalImg').src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('carouselModalClose').addEventListener('click', closeCarousel);
+  document.getElementById('carousel-modal').addEventListener('click', function(e) {
+    if (e.target === this || e.target === document.getElementById('carouselModalScroll').parentElement) closeCarousel();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); closeCarousel(); }
+  });
 
   /* ════════════════════════════════════════════════════════
      MODAL DE VÍDEO

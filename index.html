@@ -325,16 +325,21 @@
 
     /* ─── VARIANTE: CARRUSEL INSTAGRAM ────────────────────────────── */
     .card-carousel { background: var(--gris); }
-    .carousel-phone {
-      position: relative; background: #000;
-      /* Aspecto 1:1 — formato cuadrado estándar de Instagram */
+    /* Contenedor cuadrado 1:1 usando aspect-ratio — más fiable que el padding hack */
+    .carousel-phone-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: #111;
     }
-    .carousel-phone img { width: 100%; height: 0; padding-bottom: 100%; object-fit: cover; display: block; filter: grayscale(10%); transition: filter .3s; }
-    /* Truco para padding-bottom en img */
-    .carousel-phone { position: relative; overflow: hidden; }
-    .carousel-phone img { position: absolute; inset: 0; width: 100%; height: 100%; padding-bottom: 0; }
-    .carousel-phone-wrap { position: relative; padding-bottom: 100%; overflow: hidden; }
-    .carousel-phone-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(10%); transition: filter .4s, transform .6s; }
+    .carousel-phone-wrap img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      filter: grayscale(10%);
+      transition: filter .4s, transform .6s;
+    }
     .project-card:hover .carousel-phone-wrap img { filter: grayscale(0%); transform: scale(1.03); }
 
     /* Dots de navegación del carrusel */
@@ -796,7 +801,7 @@
             <span class="ig-username">araka.estudio</span>
             <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
-          <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
+          <div class="carousel-phone-wrap">
             <img src="assests/Carrusel1.png" alt="Carrusel Instagram 1"
                  onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#2e2e2e)';this.removeAttribute('src');" />
             <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
@@ -823,7 +828,7 @@
             <span class="ig-username">araka.estudio</span>
             <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
-          <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
+          <div class="carousel-phone-wrap">
             <img src="assests/Carrusel2.png" alt="Carrusel Instagram 2"
                  onerror="this.style.background='linear-gradient(135deg,#1a0a1a,#2e1a2e)';this.removeAttribute('src');" />
             <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
@@ -849,7 +854,7 @@
             <span class="ig-username">araka.estudio</span>
             <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
-          <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
+          <div class="carousel-phone-wrap">
             <img src="assests/Carrusel3.png" alt="Carrusel Instagram 3"
                  onerror="this.style.background='linear-gradient(135deg,#0a1a0a,#1a2e1a)';this.removeAttribute('src');" />
             <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
@@ -1164,7 +1169,8 @@
 
     video.src = videoSrc;
     video.load();
-    video.play().catch(() => {}); // autoplay con fallback silencioso
+    // NO llamamos a video.play() — los navegadores bloquean el autoplay con audio.
+    // El usuario pulsa play en los controles nativos del <video> y el audio funciona.
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
   }

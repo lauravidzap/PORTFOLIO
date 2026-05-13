@@ -1030,7 +1030,7 @@
 
         <article class="project-card card-offline" data-category="offline">
           <div class="project-thumb">
-            <img src="assests/render2.png" alt="Render ARAKA 2" style="height:260px"
+            <img src="assests/render2.jpeg" alt="Render ARAKA 2" style="height:260px"
                  onerror="this.style.background='linear-gradient(135deg,#1a2a1a,#0a1a0a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
           <div class="offline-meta">
@@ -1042,7 +1042,7 @@
 
         <article class="project-card card-offline" data-category="offline">
           <div class="project-thumb">
-            <img src="assests/render3.png" alt="Render ARAKA 3" style="height:260px"
+            <img src="assests/render3.jpeg" alt="Render ARAKA 3" style="height:260px"
                  onerror="this.style.background='linear-gradient(135deg,#2a1a2a,#1a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
           <div class="offline-meta">
@@ -1103,6 +1103,8 @@
   ════════════════════════════════════════════ -->
   <script>
   window.addEventListener('load', () => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    history.scrollRestoration = 'manual'; // evita que el browser restaure la posición anterior
 
     /* ── 1. LOADER ── */
     const loader    = document.getElementById('loader');

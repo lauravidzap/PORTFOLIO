@@ -201,35 +201,45 @@
     .filter-btn.active, .filter-btn:hover { background: var(--fucsia); border-color: var(--fucsia); color: #fff; }
 
     /* ─── GRID PORTFOLIO ─────────────────────────────────────────── */
-    .projects-grid { display: grid; grid-template-columns: repeat(12,1fr); gap: 1.5rem; }
+    /* El grid principal es una columna simple — cada fila es un subgrid */
+    .projects-grid { display: flex; flex-direction: column; gap: 2rem; }
 
-    /* Reels (vertical): tarjetas 1 y 2 — más estrechas */
-    .projects-grid .project-card:nth-child(1) { grid-column: span 4; }
-    .projects-grid .project-card:nth-child(2) { grid-column: span 4; }
-    /* Campañas (horizontal): tarjetas 3 y 4 — anchas */
-    .projects-grid .project-card:nth-child(3) { grid-column: span 6; }
-    .projects-grid .project-card:nth-child(4) { grid-column: span 6; }
+    /* Fila genérica: los items se reparten igual */
+    .grid-row { display: grid; gap: 1.5rem; }
 
-    /* Fila de carruseles: tarjetas 5, 6, 7 */
-    .projects-grid .project-card:nth-child(5) { grid-column: span 4; }
-    .projects-grid .project-card:nth-child(6) { grid-column: span 4; }
-    .projects-grid .project-card:nth-child(7) { grid-column: span 4; }
+    /* Reels: 2 columnas iguales centradas — max-width para que no se estiren */
+    .grid-row--reels {
+      grid-template-columns: repeat(2, 340px);
+      justify-content: center;
+    }
 
-    /* Diseño offline: tarjetas 8–12 */
-    .projects-grid .project-card:nth-child(8)  { grid-column: span 3; }
-    .projects-grid .project-card:nth-child(9)  { grid-column: span 3; }
-    .projects-grid .project-card:nth-child(10) { grid-column: span 3; }
-    .projects-grid .project-card:nth-child(11) { grid-column: span 4; }
-    .projects-grid .project-card:nth-child(12) { grid-column: span 4; }
-    .projects-grid .project-card:nth-child(13) { grid-column: span 4; }
+    /* Campañas: 2 columnas iguales, ancho completo */
+    .grid-row--campanas { grid-template-columns: repeat(2, 1fr); }
 
-    .projects-grid.filtered { grid-template-columns: repeat(2,1fr); }
-    .projects-grid.filtered .project-card { grid-column: span 1 !important; }
+    /* Carruseles: 3 columnas iguales */
+    .grid-row--carruseles { grid-template-columns: repeat(3, 1fr); }
+
+    /* Offline merch: tote + cartel + revista en primera fila */
+    .grid-row--merch { grid-template-columns: repeat(3, 1fr); }
+
+    /* Renders: 3 columnas iguales */
+    .grid-row--renders { grid-template-columns: repeat(3, 1fr); }
+
+    /* Filtro activo: mostrar las filas que tengan al menos 1 tarjeta visible */
+    .grid-row.hidden { display: none; }
+
     .project-card.hidden { display: none; }
 
     @media (max-width: 900px) {
-      .projects-grid, .projects-grid.filtered { grid-template-columns: 1fr; }
-      .projects-grid .project-card { grid-column: span 1 !important; }
+      .grid-row--reels,
+      .grid-row--campanas,
+      .grid-row--carruseles,
+      .grid-row--merch,
+      .grid-row--renders { grid-template-columns: 1fr; justify-content: stretch; }
+      .grid-row--reels { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .grid-row--reels { grid-template-columns: 1fr; }
     }
 
     /* ─── TARJETA BASE ─── */
@@ -672,355 +682,278 @@
 
     <div class="projects-grid" id="projectsGrid">
 
-      <!-- ──────────── DIVISOR ──────────── -->
-      <div class="portfolio-cat-title" data-divider="reel"><h3>Reels · Instagram ARAKA</h3></div>
+      <!-- ══ REELS ══════════════════════════════════════════════════════ -->
+      <div class="portfolio-cat-title" data-divider="reel" data-row="reel"><h3>Reels · Instagram ARAKA</h3></div>
+      <div class="grid-row grid-row--reels" data-row="reel">
 
-      <!-- ─── REEL 1 ──────────────────────────────────────────────────── -->
-      <!--
-        INSTRUCCIÓN:
-        · data-video="https://www.youtube.com/embed/VIDEOID_REEL_1"
-        · Sube el reel a YouTube como "no listado" y pega el embed ID.
-        · src="thumb-reel-1.jpg" → exporta un frame del vídeo como thumbnail.
-        · Personaliza ig-username, ig-caption, ig-actions (likes, comentarios).
-      -->
-      <article class="project-card card-reel"
-               data-category="reel"
-               data-video="assests/reel1.mp4">
-        <div class="project-thumb">
-          <!-- Barra superior estilo Instagram -->
-          <div class="ig-top-bar">
+        <article class="project-card card-reel" data-category="reel" data-video="assests/reel1.mp4">
+          <div class="project-thumb">
+            <div class="ig-top-bar">
+              <div class="ig-avatar" style="background:var(--gris-mid)"></div>
+              <span class="ig-username">araka.estudio <i class="fa-solid fa-circle-check ig-verified"></i></span>
+              <span class="ig-follow">Seguir</span>
+            </div>
+            <video class="reel-thumb-video" src="assests/reel1.mp4#t=0.001" preload="metadata" muted playsinline
+                   style="width:100%;height:480px;object-fit:cover;display:block;pointer-events:none;"></video>
+            <div class="reel-badge"><i class="fa-solid fa-film"></i> Reel</div>
+            <div class="play-overlay"><div class="play-circle"><i class="fa-solid fa-play"></i></div></div>
+            <div class="ig-bottom-bar">
+              <div class="ig-actions">
+                <span class="ig-action"><i class="fa-regular fa-heart"></i> [X] Me gusta</span>
+                <span class="ig-action"><i class="fa-regular fa-comment"></i> [X]</span>
+                <span class="ig-action"><i class="fa-regular fa-paper-plane"></i></span>
+              </div>
+              <p class="ig-caption"><strong>araka.estudio</strong> [Caption del reel 1] #araka #marketing #contenido</p>
+            </div>
+          </div>
+          <div style="padding:.75rem 1rem 1rem;background:var(--gris);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+            <span style="font-size:.72rem;color:var(--gris-light);"><strong style="font-family:'Archivo Black',sans-serif;color:var(--fucsia);font-size:1rem;">+131%</strong><br>visitas</span>
+            <button class="btn-ver-video" onclick="openModal(this)"><i class="fa-solid fa-play"></i> Ver reel</button>
+          </div>
+        </article>
+
+        <article class="project-card card-reel" data-category="reel" data-video="assests/reel2.mp4">
+          <div class="project-thumb">
+            <div class="ig-top-bar">
+              <div class="ig-avatar" style="background:var(--gris-mid)"></div>
+              <span class="ig-username">araka.estudio <i class="fa-solid fa-circle-check ig-verified"></i></span>
+              <span class="ig-follow">Seguir</span>
+            </div>
+            <video class="reel-thumb-video" src="assests/reel2.mp4#t=0.001" preload="metadata" muted playsinline
+                   style="width:100%;height:480px;object-fit:cover;display:block;pointer-events:none;"></video>
+            <div class="reel-badge"><i class="fa-solid fa-film"></i> Reel</div>
+            <div class="play-overlay"><div class="play-circle"><i class="fa-solid fa-play"></i></div></div>
+            <div class="ig-bottom-bar">
+              <div class="ig-actions">
+                <span class="ig-action"><i class="fa-regular fa-heart"></i> [X] Me gusta</span>
+                <span class="ig-action"><i class="fa-regular fa-comment"></i> [X]</span>
+                <span class="ig-action"><i class="fa-regular fa-paper-plane"></i></span>
+              </div>
+              <p class="ig-caption"><strong>araka.estudio</strong> [Caption del reel 2] #araka #contenido #rrss</p>
+            </div>
+          </div>
+          <div style="padding:.75rem 1rem 1rem;background:var(--gris);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+            <span style="font-size:.72rem;color:var(--gris-light);"><strong style="font-family:'Archivo Black',sans-serif;color:var(--fucsia);font-size:1rem;">+78%</strong><br>alcance</span>
+            <button class="btn-ver-video" onclick="openModal(this)"><i class="fa-solid fa-play"></i> Ver reel</button>
+          </div>
+        </article>
+
+      </div><!-- /grid-row--reels -->
+
+      <!-- ══ CAMPAÑAS ════════════════════════════════════════════════════ -->
+      <div class="portfolio-cat-title" data-divider="campana" data-row="campana"><h3>Campañas publicitarias · ARAKA</h3></div>
+      <div class="grid-row grid-row--campanas" data-row="campana">
+
+        <article class="project-card card-campana" data-category="campana" data-video="assests/campain1.mp4">
+          <div class="project-thumb">
+            <video class="campana-thumb-video" src="assests/campain1.mp4#t=0.001" preload="metadata" muted playsinline
+                   style="width:100%;height:300px;object-fit:cover;display:block;pointer-events:none;"></video>
+            <div class="video-badge-campana" style="position:absolute;top:.75rem;left:.75rem;z-index:4;background:var(--fucsia);padding:.3rem .8rem;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;">
+              <i class="fa-solid fa-clapperboard"></i> Campaña
+            </div>
+            <div class="play-overlay"><div class="play-circle"><i class="fa-solid fa-play"></i></div></div>
+          </div>
+          <div class="campana-meta">
+            <span class="campana-label">Campaña publicitaria · ARAKA</span>
+            <h3 class="campana-title">[Nombre de la campaña]</h3>
+            <p class="campana-desc">[Describe el objetivo de la campaña, el formato, el mensaje y el canal de difusión en 2-3 líneas.]</p>
+            <div class="campana-footer">
+              <span style="font-size:.72rem;color:var(--gris-light);"><strong style="font-family:'Archivo Black',sans-serif;color:var(--fucsia);font-size:1rem;">+117%</strong><br>seguidores</span>
+              <button class="btn-ver-video" onclick="openModal(this)"><i class="fa-solid fa-play"></i> Ver vídeo</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card card-campana" data-category="campana" data-video="assests/campain2.mp4">
+          <div class="project-thumb">
+            <video class="campana-thumb-video" src="assests/campain2.mp4#t=0.001" preload="metadata" muted playsinline
+                   style="width:100%;height:300px;object-fit:cover;display:block;pointer-events:none;"></video>
+            <div class="video-badge-campana" style="position:absolute;top:.75rem;left:.75rem;z-index:4;background:var(--fucsia);padding:.3rem .8rem;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;">
+              <i class="fa-solid fa-clapperboard"></i> Campaña
+            </div>
+            <div class="play-overlay"><div class="play-circle"><i class="fa-solid fa-play"></i></div></div>
+          </div>
+          <div class="campana-meta">
+            <span class="campana-label">Campaña publicitaria · ARAKA</span>
+            <h3 class="campana-title">[Nombre de la campaña]</h3>
+            <p class="campana-desc">[Describe el objetivo, el formato, el mensaje y el canal de difusión en 2-3 líneas.]</p>
+            <div class="campana-footer">
+              <span style="font-size:.72rem;color:var(--gris-light);"><strong style="font-family:'Archivo Black',sans-serif;color:var(--fucsia);font-size:1rem;">+20%</strong><br>visualizaciones</span>
+              <button class="btn-ver-video" onclick="openModal(this)"><i class="fa-solid fa-play"></i> Ver vídeo</button>
+            </div>
+          </div>
+        </article>
+
+      </div><!-- /grid-row--campanas -->
+
+      <!-- ══ CARRUSELES ══════════════════════════════════════════════════ -->
+      <div class="portfolio-cat-title" data-divider="carrusel" data-row="carrusel"><h3>Carruseles · Instagram (1080×1080 px)</h3></div>
+      <div class="grid-row grid-row--carruseles" data-row="carrusel">
+
+        <article class="project-card card-carousel" data-category="carrusel">
+          <div class="carousel-ig-header">
             <div class="ig-avatar" style="background:var(--gris-mid)"></div>
-            <span class="ig-username">araka.estudio <i class="fa-solid fa-circle-check ig-verified"></i></span>
-            <span class="ig-follow">Seguir</span>
+            <span class="ig-username">araka.estudio</span>
+            <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
-
-          <video class="reel-thumb-video"
-                 src="assests/reel1.mp4#t=0.001"
-                 preload="metadata"
-                 muted playsinline
-                 style="width:100%;height:480px;object-fit:cover;display:block;pointer-events:none;"></video>
-
-          <div class="reel-badge"><i class="fa-solid fa-film"></i> Reel</div>
-
-          <div class="play-overlay">
-            <div class="play-circle"><i class="fa-solid fa-play"></i></div>
+          <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
+            <img src="carrusel-1-slide-1.jpg" alt="Carrusel Instagram 1"
+                 onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#2e2e2e)';this.removeAttribute('src');" />
+            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
           </div>
-
-          <!-- Barra inferior estilo Instagram -->
-          <div class="ig-bottom-bar">
+          <div class="carousel-dots">
+            <div class="carousel-dot active"></div><div class="carousel-dot"></div>
+            <div class="carousel-dot"></div><div class="carousel-dot"></div>
+          </div>
+          <div class="carousel-ig-footer">
             <div class="ig-actions">
-              <span class="ig-action"><i class="fa-regular fa-heart"></i> [X] Me gusta</span>
+              <span class="ig-action"><i class="fa-regular fa-heart"></i> [X]</span>
               <span class="ig-action"><i class="fa-regular fa-comment"></i> [X]</span>
               <span class="ig-action"><i class="fa-regular fa-paper-plane"></i></span>
+              <span class="ig-action" style="margin-left:auto"><i class="fa-regular fa-bookmark"></i></span>
             </div>
-            <p class="ig-caption"><strong>araka.estudio</strong> [Añade aquí el caption real del reel] #araka #marketing #contenido</p>
+            <p class="ig-caption"><strong>araka.estudio</strong> [Caption carrusel 1] <span style="color:var(--fucsia)">#araka #marketing</span></p>
+            <p style="margin-top:.6rem;font-size:.72rem;color:var(--gris-light);"><strong style="font-family:'Archivo Black',sans-serif;color:var(--fucsia);font-size:1rem;">+140%</strong> interacciones contenido</p>
           </div>
-        </div>
-        <!-- Botón fuera del thumb para abrir modal -->
-        <div style="padding:.75rem 1rem; background:var(--gris);">
-          <button class="btn-ver-video" onclick="openModal(this)">
-            <i class="fa-solid fa-play"></i> Ver reel
-          </button>
-        </div>
-      </article>
+        </article>
 
-      <!-- ─── REEL 2 ──────────────────────────────────────────────────── -->
-      <article class="project-card card-reel"
-               data-category="reel"
-               data-video="assests/reel2.mp4">
-        <div class="project-thumb">
-          <div class="ig-top-bar">
+        <article class="project-card card-carousel" data-category="carrusel">
+          <div class="carousel-ig-header">
             <div class="ig-avatar" style="background:var(--gris-mid)"></div>
-            <span class="ig-username">araka.estudio <i class="fa-solid fa-circle-check ig-verified"></i></span>
-            <span class="ig-follow">Seguir</span>
+            <span class="ig-username">araka.estudio</span>
+            <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
-
-          <video class="reel-thumb-video"
-                 src="assests/reel2.mp4#t=0.001"
-                 preload="metadata"
-                 muted playsinline
-                 style="width:100%;height:480px;object-fit:cover;display:block;pointer-events:none;"></video>
-
-          <div class="reel-badge"><i class="fa-solid fa-film"></i> Reel</div>
-
-          <div class="play-overlay">
-            <div class="play-circle"><i class="fa-solid fa-play"></i></div>
+          <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
+            <img src="carrusel-2-slide-1.jpg" alt="Carrusel Instagram 2"
+                 onerror="this.style.background='linear-gradient(135deg,#1a0a1a,#2e1a2e)';this.removeAttribute('src');" />
+            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
           </div>
-
-          <div class="ig-bottom-bar">
+          <div class="carousel-dots">
+            <div class="carousel-dot active"></div><div class="carousel-dot"></div><div class="carousel-dot"></div>
+          </div>
+          <div class="carousel-ig-footer">
             <div class="ig-actions">
-              <span class="ig-action"><i class="fa-regular fa-heart"></i> [X] Me gusta</span>
+              <span class="ig-action"><i class="fa-regular fa-heart"></i> [X]</span>
               <span class="ig-action"><i class="fa-regular fa-comment"></i> [X]</span>
               <span class="ig-action"><i class="fa-regular fa-paper-plane"></i></span>
+              <span class="ig-action" style="margin-left:auto"><i class="fa-regular fa-bookmark"></i></span>
             </div>
-            <p class="ig-caption"><strong>araka.estudio</strong> [Caption del reel 2] #araka #contenido #rrss</p>
+            <p class="ig-caption"><strong>araka.estudio</strong> [Caption carrusel 2] <span style="color:var(--fucsia)">#araka #branding</span></p>
+            <p style="margin-top:.6rem;font-size:.72rem;color:var(--gris-light);"><strong style="font-family:'Archivo Black',sans-serif;color:var(--fucsia);font-size:1rem;">+728%</strong> clics en el enlace</p>
           </div>
-        </div>
-        <div style="padding:.75rem 1rem; background:var(--gris);">
-          <button class="btn-ver-video" onclick="openModal(this)">
-            <i class="fa-solid fa-play"></i> Ver reel
-          </button>
-        </div>
-      </article>
+        </article>
 
-      <!-- ──────────── DIVISOR CAMPAÑAS ──────────── -->
-      <div class="portfolio-cat-title" data-divider="campana"><h3>Campañas publicitarias · ARAKA</h3></div>
-
-      <!-- ─── CAMPAÑA 1 ─────────────────────────────────────────────── -->
-      <!--
-        Las campañas también son reels, pero la presentación enfatiza
-        el brief, el objetivo y el resultado — más estética de anuncio.
-        data-video → mismo sistema: YouTube embed no listado.
-        thumb-campana-1.jpg → frame representativo o carátula del vídeo.
-      -->
-      <article class="project-card card-campana"
-               data-category="campana"
-               data-video="assests/campain1.mp4">
-        <div class="project-thumb">
-          <video class="campana-thumb-video"
-                 src="assests/campain1.mp4#t=0.001"
-                 preload="metadata"
-                 muted playsinline
-                 style="width:100%;height:300px;object-fit:cover;display:block;pointer-events:none;"></video>
-          <div class="video-badge-campana" style="position:absolute;top:.75rem;left:.75rem;z-index:4;background:var(--fucsia);padding:.3rem .8rem;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;">
-            <i class="fa-solid fa-clapperboard"></i> Campaña
+        <article class="project-card card-carousel" data-category="carrusel">
+          <div class="carousel-ig-header">
+            <div class="ig-avatar" style="background:var(--gris-mid)"></div>
+            <span class="ig-username">araka.estudio</span>
+            <i class="fa-solid fa-ellipsis carousel-more"></i>
           </div>
-          <div class="play-overlay">
-            <div class="play-circle"><i class="fa-solid fa-play"></i></div>
+          <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
+            <img src="carrusel-3-slide-1.jpg" alt="Carrusel Instagram 3"
+                 onerror="this.style.background='linear-gradient(135deg,#0a1a0a,#1a2e1a)';this.removeAttribute('src');" />
+            <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
           </div>
-        </div>
-        <div class="campana-meta">
-          <span class="campana-label">Campaña publicitaria · ARAKA</span>
-          <h3 class="campana-title">[Nombre de la campaña]</h3>
-          <p class="campana-desc">[Describe el objetivo de la campaña, el formato, el mensaje y el canal de difusión en 2-3 líneas.]</p>
-          <div class="campana-footer">
-            <span class="campana-kpi">Resultado: <strong>[ej. +45% alcance]</strong></span>
-            <button class="btn-ver-video" onclick="openModal(this)">
-              <i class="fa-solid fa-play"></i> Ver vídeo
-            </button>
+          <div class="carousel-dots">
+            <div class="carousel-dot active"></div><div class="carousel-dot"></div>
+            <div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div>
           </div>
-        </div>
-      </article>
-
-      <!-- ─── CAMPAÑA 2 ─────────────────────────────────────────────── -->
-      <article class="project-card card-campana"
-               data-category="campana"
-               data-video="assests/campain2.mp4">
-        <div class="project-thumb">
-          <video class="campana-thumb-video"
-                 src="assests/campain2.mp4#t=0.001"
-                 preload="metadata"
-                 muted playsinline
-                 style="width:100%;height:300px;object-fit:cover;display:block;pointer-events:none;"></video>
-          <div class="video-badge-campana" style="position:absolute;top:.75rem;left:.75rem;z-index:4;background:var(--fucsia);padding:.3rem .8rem;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;">
-            <i class="fa-solid fa-clapperboard"></i> Campaña
+          <div class="carousel-ig-footer">
+            <div class="ig-actions">
+              <span class="ig-action"><i class="fa-regular fa-heart"></i> [X]</span>
+              <span class="ig-action"><i class="fa-regular fa-comment"></i> [X]</span>
+              <span class="ig-action"><i class="fa-regular fa-paper-plane"></i></span>
+              <span class="ig-action" style="margin-left:auto"><i class="fa-regular fa-bookmark"></i></span>
+            </div>
+            <p class="ig-caption"><strong>araka.estudio</strong> [Caption carrusel 3] <span style="color:var(--fucsia)">#contenidovisual #rrss</span></p>
+            <p style="margin-top:.6rem;font-size:.72rem;color:var(--gris-light);"><strong style="font-family:'Archivo Black',sans-serif;color:var(--fucsia);font-size:1rem;">+728%</strong> clics en el enlace</p>
           </div>
-          <div class="play-overlay">
-            <div class="play-circle"><i class="fa-solid fa-play"></i></div>
+        </article>
+
+      </div><!-- /grid-row--carruseles -->
+
+      <!-- ══ DISEÑO OFFLINE — MERCH ══════════════════════════════════════ -->
+      <div class="portfolio-cat-title" data-divider="offline" data-row="offline"><h3>Diseño offline & Merchandising</h3></div>
+      <div class="grid-row grid-row--merch" data-row="offline">
+
+        <article class="project-card card-offline" data-category="offline">
+          <div class="project-thumb">
+            <img src="tote-bag.jpg" alt="Tote bag ARAKA" style="height:260px"
+                 onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#2a1a1a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
-        </div>
-        <div class="campana-meta">
-          <span class="campana-label">Campaña publicitaria · ARAKA</span>
-          <h3 class="campana-title">[Nombre de la campaña]</h3>
-          <p class="campana-desc">[Describe el objetivo, el formato, el mensaje y el canal de difusión en 2-3 líneas.]</p>
-          <div class="campana-footer">
-            <span class="campana-kpi">Resultado: <strong>[ej. +60% engagement]</strong></span>
-            <button class="btn-ver-video" onclick="openModal(this)">
-              <i class="fa-solid fa-play"></i> Ver vídeo
-            </button>
+          <div class="offline-meta">
+            <p class="offline-label">Merchandising</p>
+            <h3 class="offline-title">Tote Bag ARAKA</h3>
+            <p class="offline-desc">Diseño de tote bag como pieza de merchandising de marca. Aplicación de identidad corporativa en soporte textil.</p>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <!-- ──────────── DIVISOR CARRUSELES ──────────── -->
-      <div class="portfolio-cat-title" data-divider="carrusel"><h3>Carruseles · Instagram (1080×1080 px)</h3></div>
-
-      <!-- ─── CARRUSEL 1 ─────────────────────────────────────────────── -->
-      <!--
-        Formato 1:1 (1080×1080 px), estándar Instagram.
-        Sube la primera diapositiva del carrusel como imagen.
-        carousel-N-slide-1.jpg → primera imagen visible.
-        Personaliza caption, likes y comentarios con los datos reales.
-      -->
-      <article class="project-card card-carousel" data-category="carrusel">
-        <!-- Header estilo app Instagram -->
-        <div class="carousel-ig-header">
-          <div class="ig-avatar" style="background:var(--gris-mid)"></div>
-          <span class="ig-username">araka.estudio</span>
-          <i class="fa-solid fa-ellipsis carousel-more"></i>
-        </div>
-
-        <!-- Imagen cuadrada 1:1 -->
-        <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
-          <img src="carrusel-1-slide-1.jpg" alt="Carrusel Instagram 1"
-               onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#2e2e2e)';this.removeAttribute('src');" />
-          <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
-        </div>
-
-        <!-- Dots de paginación -->
-        <div class="carousel-dots">
-          <div class="carousel-dot active"></div>
-          <div class="carousel-dot"></div>
-          <div class="carousel-dot"></div>
-          <div class="carousel-dot"></div>
-        </div>
-
-        <!-- Footer -->
-        <div class="carousel-ig-footer">
-          <div class="ig-actions">
-            <span class="ig-action"><i class="fa-regular fa-heart"></i> [X]</span>
-            <span class="ig-action"><i class="fa-regular fa-comment"></i> [X]</span>
-            <span class="ig-action"><i class="fa-regular fa-paper-plane"></i></span>
-            <span class="ig-action" style="margin-left:auto"><i class="fa-regular fa-bookmark"></i></span>
+        <article class="project-card card-offline" data-category="offline">
+          <div class="project-thumb">
+            <img src="cartel.jpg" alt="Cartel ARAKA" style="height:260px"
+                 onerror="this.style.background='linear-gradient(135deg,#1a1a2a,#0a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
-          <p class="ig-caption"><strong>araka.estudio</strong> [Título o caption del carrusel 1. Cuéntanos de qué trata este contenido.] <span style="color:var(--fucsia)">#araka #marketing #contenido</span></p>
-        </div>
-      </article>
-
-      <!-- ─── CARRUSEL 2 ─────────────────────────────────────────────── -->
-      <article class="project-card card-carousel" data-category="carrusel">
-        <div class="carousel-ig-header">
-          <div class="ig-avatar" style="background:var(--gris-mid)"></div>
-          <span class="ig-username">araka.estudio</span>
-          <i class="fa-solid fa-ellipsis carousel-more"></i>
-        </div>
-        <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
-          <img src="carrusel-2-slide-1.jpg" alt="Carrusel Instagram 2"
-               onerror="this.style.background='linear-gradient(135deg,#1a0a1a,#2e1a2e)';this.removeAttribute('src');" />
-          <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
-        </div>
-        <div class="carousel-dots">
-          <div class="carousel-dot active"></div>
-          <div class="carousel-dot"></div>
-          <div class="carousel-dot"></div>
-        </div>
-        <div class="carousel-ig-footer">
-          <div class="ig-actions">
-            <span class="ig-action"><i class="fa-regular fa-heart"></i> [X]</span>
-            <span class="ig-action"><i class="fa-regular fa-comment"></i> [X]</span>
-            <span class="ig-action"><i class="fa-regular fa-paper-plane"></i></span>
-            <span class="ig-action" style="margin-left:auto"><i class="fa-regular fa-bookmark"></i></span>
+          <div class="offline-meta">
+            <p class="offline-label">Diseño editorial</p>
+            <h3 class="offline-title">Cartel ARAKA</h3>
+            <p class="offline-desc">Diseño de cartel para comunicación offline. Composición tipográfica y visual con coherencia de marca.</p>
           </div>
-          <p class="ig-caption"><strong>araka.estudio</strong> [Caption del carrusel 2.] <span style="color:var(--fucsia)">#araka #branding</span></p>
-        </div>
-      </article>
+        </article>
 
-      <!-- ─── CARRUSEL 3 ─────────────────────────────────────────────── -->
-      <article class="project-card card-carousel" data-category="carrusel">
-        <div class="carousel-ig-header">
-          <div class="ig-avatar" style="background:var(--gris-mid)"></div>
-          <span class="ig-username">araka.estudio</span>
-          <i class="fa-solid fa-ellipsis carousel-more"></i>
-        </div>
-        <div class="carousel-phone-wrap" style="position:relative;padding-bottom:100%;overflow:hidden;background:#111;">
-          <img src="carrusel-3-slide-1.jpg" alt="Carrusel Instagram 3"
-               onerror="this.style.background='linear-gradient(135deg,#0a1a0a,#1a2e1a)';this.removeAttribute('src');" />
-          <div class="carousel-badge"><i class="fa-solid fa-table-cells-large"></i> 1/[N]</div>
-        </div>
-        <div class="carousel-dots">
-          <div class="carousel-dot active"></div>
-          <div class="carousel-dot"></div>
-          <div class="carousel-dot"></div>
-          <div class="carousel-dot"></div>
-          <div class="carousel-dot"></div>
-        </div>
-        <div class="carousel-ig-footer">
-          <div class="ig-actions">
-            <span class="ig-action"><i class="fa-regular fa-heart"></i> [X]</span>
-            <span class="ig-action"><i class="fa-regular fa-comment"></i> [X]</span>
-            <span class="ig-action"><i class="fa-regular fa-paper-plane"></i></span>
-            <span class="ig-action" style="margin-left:auto"><i class="fa-regular fa-bookmark"></i></span>
+        <article class="project-card card-offline" data-category="offline">
+          <div class="project-thumb">
+            <img src="revista.jpg" alt="Revista ARAKA" style="height:260px"
+                 onerror="this.style.background='linear-gradient(135deg,#2a1a0a,#1a0a0a)';this.style.height='260px';this.removeAttribute('src');" />
           </div>
-          <p class="ig-caption"><strong>araka.estudio</strong> [Caption del carrusel 3.] <span style="color:var(--fucsia)">#contenidovisual #rrss</span></p>
-        </div>
-      </article>
+          <div class="offline-meta">
+            <p class="offline-label">Diseño editorial</p>
+            <h3 class="offline-title">Revista ARAKA</h3>
+            <p class="offline-desc">Diseño editorial de revista corporativa. Maquetación, jerarquía tipográfica y aplicación de sistema visual de marca.</p>
+          </div>
+        </article>
 
-      <!-- ──────────── DIVISOR OFFLINE ──────────── -->
-      <div class="portfolio-cat-title" data-divider="offline"><h3>Diseño offline & Merchandising</h3></div>
+      </div><!-- /grid-row--merch -->
 
-      <!-- ─── TOTE BAG ──── -->
-      <article class="project-card card-offline" data-category="offline">
-        <div class="project-thumb">
-          <img src="tote-bag.jpg" alt="Tote bag ARAKA"
-               style="height:260px"
-               onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#2a1a1a)';this.style.height='260px';this.removeAttribute('src');" />
-        </div>
-        <div class="offline-meta">
-          <p class="offline-label">Merchandising</p>
-          <h3 class="offline-title">Tote Bag ARAKA</h3>
-          <p class="offline-desc">Diseño de tote bag como pieza de merchandising de marca. Aplicación de identidad corporativa en soporte textil.</p>
-        </div>
-      </article>
+      <!-- ══ RENDERS ═════════════════════════════════════════════════════ -->
+      <div class="grid-row grid-row--renders" data-row="offline">
 
-      <!-- ─── CARTEL ──── -->
-      <article class="project-card card-offline" data-category="offline">
-        <div class="project-thumb">
-          <img src="cartel.jpg" alt="Cartel ARAKA"
-               style="height:260px"
-               onerror="this.style.background='linear-gradient(135deg,#1a1a2a,#0a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
-        </div>
-        <div class="offline-meta">
-          <p class="offline-label">Diseño editorial</p>
-          <h3 class="offline-title">Cartel ARAKA</h3>
-          <p class="offline-desc">Diseño de cartel para comunicación offline. Composición tipográfica y visual con coherencia de marca.</p>
-        </div>
-      </article>
+        <article class="project-card card-offline" data-category="offline">
+          <div class="project-thumb">
+            <img src="render-1.jpg" alt="Render ARAKA 1" style="height:260px"
+                 onerror="this.style.background='linear-gradient(135deg,#1a2a2a,#0a1a1a)';this.style.height='260px';this.removeAttribute('src');" />
+          </div>
+          <div class="offline-meta">
+            <p class="offline-label">Render 3D</p>
+            <h3 class="offline-title">Render ARAKA — Espacio 01</h3>
+            <p class="offline-desc">Visualización 3D aplicada a comunicación de marca. El background en arquitectura al servicio del storytelling visual.</p>
+          </div>
+        </article>
 
-      <!-- ─── REVISTA ──── -->
-      <article class="project-card card-offline" data-category="offline">
-        <div class="project-thumb">
-          <img src="revista.jpg" alt="Revista ARAKA"
-               style="height:260px"
-               onerror="this.style.background='linear-gradient(135deg,#2a1a0a,#1a0a0a)';this.style.height='260px';this.removeAttribute('src');" />
-        </div>
-        <div class="offline-meta">
-          <p class="offline-label">Diseño editorial</p>
-          <h3 class="offline-title">Revista ARAKA</h3>
-          <p class="offline-desc">Diseño editorial de revista corporativa. Maquetación, jerarquía tipográfica y aplicación de sistema visual de marca.</p>
-        </div>
-      </article>
+        <article class="project-card card-offline" data-category="offline">
+          <div class="project-thumb">
+            <img src="render-2.jpg" alt="Render ARAKA 2" style="height:260px"
+                 onerror="this.style.background='linear-gradient(135deg,#1a2a1a,#0a1a0a)';this.style.height='260px';this.removeAttribute('src');" />
+          </div>
+          <div class="offline-meta">
+            <p class="offline-label">Render 3D</p>
+            <h3 class="offline-title">Render ARAKA — Espacio 02</h3>
+            <p class="offline-desc">Visualización de espacios con criterio estético propio. Composición, iluminación y presentación orientada a cliente.</p>
+          </div>
+        </article>
 
-      <!-- ─── RENDER 1 ──── -->
-      <article class="project-card card-offline" data-category="offline">
-        <div class="project-thumb">
-          <img src="render-1.jpg" alt="Render ARAKA 1"
-               style="height:260px"
-               onerror="this.style.background='linear-gradient(135deg,#1a2a2a,#0a1a1a)';this.style.height='260px';this.removeAttribute('src');" />
-        </div>
-        <div class="offline-meta">
-          <p class="offline-label">Render 3D</p>
-          <h3 class="offline-title">Render ARAKA — Espacio 01</h3>
-          <p class="offline-desc">Visualización 3D aplicada a comunicación de marca. El background en arquitectura al servicio del storytelling visual.</p>
-        </div>
-      </article>
+        <article class="project-card card-offline" data-category="offline">
+          <div class="project-thumb">
+            <img src="render-3.jpg" alt="Render ARAKA 3" style="height:260px"
+                 onerror="this.style.background='linear-gradient(135deg,#2a1a2a,#1a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
+          </div>
+          <div class="offline-meta">
+            <p class="offline-label">Render 3D</p>
+            <h3 class="offline-title">Render ARAKA — Espacio 03</h3>
+            <p class="offline-desc">Tercer render de la colección. Capacidad de traducir un concepto de marca en un espacio visualmente coherente.</p>
+          </div>
+        </article>
 
-      <!-- ─── RENDER 2 ──── -->
-      <article class="project-card card-offline" data-category="offline">
-        <div class="project-thumb">
-          <img src="render-2.jpg" alt="Render ARAKA 2"
-               style="height:260px"
-               onerror="this.style.background='linear-gradient(135deg,#1a2a1a,#0a1a0a)';this.style.height='260px';this.removeAttribute('src');" />
-        </div>
-        <div class="offline-meta">
-          <p class="offline-label">Render 3D</p>
-          <h3 class="offline-title">Render ARAKA — Espacio 02</h3>
-          <p class="offline-desc">Visualización de espacios con criterio estético propio. Composición, iluminación y presentación orientada a cliente.</p>
-        </div>
-      </article>
-
-      <!-- ─── RENDER 3 ──── -->
-      <article class="project-card card-offline" data-category="offline">
-        <div class="project-thumb">
-          <img src="render-3.jpg" alt="Render ARAKA 3"
-               style="height:260px"
-               onerror="this.style.background='linear-gradient(135deg,#2a1a2a,#1a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
-        </div>
-        <div class="offline-meta">
-          <p class="offline-label">Render 3D</p>
-          <h3 class="offline-title">Render ARAKA — Espacio 03</h3>
-          <p class="offline-desc">Tercer render de la colección. Capacidad de traducir un concepto de marca en un espacio visualmente coherente.</p>
-        </div>
-      </article>
+      </div><!-- /grid-row--renders -->
 
     </div><!-- /projects-grid -->
   </section>
@@ -1135,8 +1068,8 @@
 
 
     /* ── 5. FILTRO ──────────────────────────────────────────────────
-       Los divisores de categoría (.portfolio-cat-title) también se
-       ocultan cuando no hay ninguna tarjeta de esa categoría visible.
+       Oculta/muestra grid-rows enteras según la categoría activa.
+       Los divisores .portfolio-cat-title siguen usando data-divider.
     ────────────────────────────────────────────────────────────────── */
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1144,20 +1077,22 @@
         btn.classList.add('active');
         const f = btn.dataset.filter;
 
-        // Tarjetas
+        // Tarjetas individuales (para que el cursor y GSAP las sigan encontrando)
         document.querySelectorAll('.project-card').forEach(card => {
           card.classList.toggle('hidden', f !== 'all' && card.dataset.category !== f);
         });
 
-        // Divisores: visibles solo si al menos 1 tarjeta de esa categoría es visible
-        document.querySelectorAll('.portfolio-cat-title').forEach(div => {
-          const cat = div.dataset.divider;
-          const anyVisible = f === 'all' || f === cat;
-          div.style.display = anyVisible ? '' : 'none';
+        // Filas: ocultar si ninguna tarjeta de esa fila es visible
+        document.querySelectorAll('.grid-row').forEach(row => {
+          const rowCat = row.dataset.row;
+          row.style.display = (f === 'all' || f === rowCat) ? '' : 'none';
         });
 
-        // Grid
-        document.getElementById('projectsGrid').classList.toggle('filtered', f !== 'all');
+        // Divisores
+        document.querySelectorAll('.portfolio-cat-title').forEach(div => {
+          const cat = div.dataset.divider;
+          div.style.display = (f === 'all' || f === cat) ? '' : 'none';
+        });
       });
     });
 

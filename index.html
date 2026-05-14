@@ -1218,7 +1218,6 @@
       gsap.from('.hero-desc',        { opacity:0, y:20, duration:.7, delay:.45 });
       gsap.from('.hero-cta-group',   { opacity:0, y:20, duration:.7, delay:.60 });
       gsap.from('.hero-image-frame', { opacity:0, x:40, duration:.9, delay:.35, ease:'power2.out' });
-      gsap.from('.hero-tags',        { opacity:0, y:14, duration:.6, delay:.80 });
 
       // Parallax hero
       const hp = document.getElementById('heroParallax');
@@ -1232,9 +1231,11 @@
         '.sobre-stats', '.skills-list', '.lang-row',
         '.match-header', '.match-card',
         '.portfolio-cat-title', '.project-card',
-        '.mojate-inner > *'
+        '.mojate-inner h2', '.mojate-inner p', '.mojate-inner .section-label',
+        '.mojate-inner .btn-mojate', '.mojate-inner .contact-info'
       ].forEach(sel => {
         document.querySelectorAll(sel).forEach(el => {
+          if (!el) return; // guard por si el selector no encuentra nada
           gsap.fromTo(el, { opacity:0, y:28 }, {
             opacity:1, y:0, duration:.7, ease:'power2.out',
             scrollTrigger: { trigger:el, start:'top 89%', toggleActions:'play none none none' }
@@ -1252,7 +1253,7 @@
 
     // Fallback sin GSAP
     if (typeof gsap === 'undefined') {
-      document.querySelectorAll('.hero-eyebrow,.hero-title,.hero-desc,.hero-cta-group,.hero-image-frame,.hero-tags').forEach(el => {
+      document.querySelectorAll('.hero-eyebrow,.hero-title,.hero-desc,.hero-cta-group,.hero-image-frame').forEach(el => {
         el.style.opacity = '1'; el.style.transform = 'none';
       });
     }

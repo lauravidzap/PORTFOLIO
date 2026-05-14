@@ -222,8 +222,8 @@
     /* Offline merch: tote + cartel + revista en primera fila */
     .grid-row--merch { grid-template-columns: repeat(3, 1fr); }
 
-    /* Renders: 3 columnas iguales */
-    .grid-row--renders { grid-template-columns: repeat(3, 1fr); }
+    /* Renders: 1 elemento con el mismo ancho que una columna de campaña (50%) */
+    .grid-row--renders { grid-template-columns: calc(50% - 0.75rem); justify-content: center; }
 
     /* Filtro activo: mostrar las filas que tengan al menos 1 tarjeta visible */
     .grid-row.hidden { display: none; }
@@ -886,7 +886,36 @@
           </div>
         </article>
 
-      </div><!-- /grid-row--campanas -->
+      </div><!-- /grid-row--campanas (vacío temporalmente, se rellena abajo) -->
+
+      <!-- Segunda fila de campañas: material gráfico -->
+      <div class="grid-row grid-row--campanas" data-row="campana">
+
+        <article class="project-card card-offline" data-category="campana">
+          <div class="project-thumb">
+            <img src="assests/render2.jpeg" alt="Campaña material gráfico 01" style="height:260px"
+                 onerror="this.style.background='linear-gradient(135deg,#1a2a1a,#0a1a0a)';this.style.height='260px';this.removeAttribute('src');" />
+          </div>
+          <div class="offline-meta">
+            <p class="offline-label">Campaña publicitaria</p>
+            <h3 class="offline-title">Campaña — Material gráfico 01</h3>
+            <p class="offline-desc">Material gráfico para campaña publicitaria de posicionamiento.</p>
+          </div>
+        </article>
+
+        <article class="project-card card-offline" data-category="campana">
+          <div class="project-thumb">
+            <img src="assests/render3.jpeg" alt="Campaña material gráfico 02" style="height:260px"
+                 onerror="this.style.background='linear-gradient(135deg,#2a1a2a,#1a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
+          </div>
+          <div class="offline-meta">
+            <p class="offline-label">Campaña publicitaria</p>
+            <h3 class="offline-title">Campaña — Material gráfico 02</h3>
+            <p class="offline-desc">Material gráfico para campaña publicitaria de posicionamiento.</p>
+          </div>
+        </article>
+
+      </div><!-- /grid-row--campanas material gráfico -->
 
       <!-- ══ CARRUSELES ══════════════════════════════════════════════════ -->
       <div class="portfolio-cat-title" data-divider="carrusel" data-row="carrusel"><h3>Carruseles</h3></div>
@@ -1026,30 +1055,6 @@
             <p class="offline-label">Render 3D</p>
             <h3 class="offline-title">Render ARAKA — Espacio 01</h3>
             <p class="offline-desc">Visualización 3D aplicada a comunicación de marca. El background en arquitectura al servicio del storytelling visual.</p>
-          </div>
-        </article>
-
-        <article class="project-card card-offline" data-category="campana">
-          <div class="project-thumb">
-            <img src="assests/render2.jpeg" alt="Render ARAKA 2" style="height:260px"
-                 onerror="this.style.background='linear-gradient(135deg,#1a2a1a,#0a1a0a)';this.style.height='260px';this.removeAttribute('src');" />
-          </div>
-          <div class="offline-meta">
-            <p class="offline-label">Campaña publicitaria</p>
-            <h3 class="offline-title">Campaña — Material gráfico 01</h3>
-            <p class="offline-desc">Material gráfico para campaña publicitaria de posicionamiento.</p>
-          </div>
-        </article>
-
-        <article class="project-card card-offline" data-category="campana">
-          <div class="project-thumb">
-            <img src="assests/render3.jpeg" alt="Render ARAKA 3" style="height:260px"
-                 onerror="this.style.background='linear-gradient(135deg,#2a1a2a,#1a0a1a)';this.style.height='260px';this.removeAttribute('src');" />
-          </div>
-          <div class="offline-meta">
-            <p class="offline-label">Campaña publicitaria</p>
-            <h3 class="offline-title">Campaña — Material gráfico 02</h3>
-            <p class="offline-desc">Material gráfico para campaña publicitaria de posicionamiento.</p>
           </div>
         </article>
 
